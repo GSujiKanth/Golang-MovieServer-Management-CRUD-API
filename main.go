@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-
-	"github.com/gorilla/mux"
+	"strconv"
 )
 
 // struct of type movie
@@ -41,6 +41,19 @@ func deleteMovie(w http.ResponseWriter, r *http.Request) {
 		if item.ID == params["id"] {
 			movies = append(movies[:index], movies[index+1:]...)
 			break
+		}
+	}
+	json.NewEncoder(w).Encode(movies)
+}
+
+// get a movie
+func getMovie(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for _, item := range movies {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
 		}
 	}
 }
